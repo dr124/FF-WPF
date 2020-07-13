@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using FF_WPF.Commands;
 using Microsoft.Win32;
@@ -20,7 +18,10 @@ namespace FF_WPF.ViewModels
         {
             var openFileDialog = new OpenFileDialog()
             {
-                AddExtension = true, CheckFileExists = true, CheckPathExists = true, DefaultExt = "jpg"
+                AddExtension = true,
+                CheckFileExists = true,
+                CheckPathExists = true,
+                DefaultExt = "jpg"
             };
             if (openFileDialog.ShowDialog() == true)
             {
