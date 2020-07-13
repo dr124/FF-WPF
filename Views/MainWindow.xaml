@@ -3,23 +3,57 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:conv="clr-namespace:FF_WPF.Converters"
         xmlns:local="clr-namespace:FF_WPF.Views"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <conv:EnumBooleanConverter x:Key="EnumBooleanConverter" />
+    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="207*"/>
-            <ColumnDefinition Width="593*"/>
+            <ColumnDefinition Width="207*" />
+            <ColumnDefinition Width="593*" />
         </Grid.ColumnDefinitions>
         <StackPanel Margin="10">
-            <Button Command="{Binding LoadImageCommand}" Content="Load image"/>
-            <Separator Height="10"/>
-            <RadioButton Content="Bradley's thresholding" />
-            <RadioButton Content="Gaussian blur" />
-            <Separator Height="10"/>
+            <Button Command="{Binding LoadImageCommand}" Content="Load image" />
+            <Separator Height="10" />
+            <RadioButton
+                IsChecked="{Binding SelectedFilter, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=TestThreshold}"
+                x:Name="TestThresholdRadioBtn" Content="TestThreshold" />
+            <RadioButton
+                IsChecked="{Binding SelectedFilter, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=BradleyThresholding}"
+                x:Name="BradleyThresholdingRadioBtn" Content="Bradley's thresholding" />
+            <RadioButton
+                IsChecked="{Binding SelectedFilter, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=GaussianBlur}"
+                x:Name="GaussianBlurRadioBtn" Content="Gaussian blur" />
+            <Separator Height="10" />
+
+            <!--test threshold params-->
+            <StackPanel
+                Visibility="{Binding IsChecked, ElementName=TestThresholdRadioBtn, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <TextBlock FontSize="14" Text="{Binding TestThresholdParams.Ratio, StringFormat=Threshold {0:0.00}}" />
+                <Slider Minimum="0" Maximum="1" TickFrequency="0.1" TickPlacement="BottomRight"
+                        Value="{Binding TestThresholdParams.Ratio}" />
+            </StackPanel>
+            <!--bradleys threshold params-->
+            <StackPanel
+                Visibility="{Binding IsChecked, ElementName=BradleyThresholdingRadioBtn, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <Label Content="bradley" />
+                <Slider />
+            </StackPanel>
+
+            <!--gaussian blur params-->
+            <StackPanel
+                Visibility="{Binding IsChecked, ElementName=GaussianBlurRadioBtn, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <Label Content="gauss" />
+                <Slider />
+            </StackPanel>
+
         </StackPanel>
         <Border Margin="10,10,10,10" BorderThickness="1" BorderBrush="Black" Grid.Column="1">
-            <Image Source="{Binding Image}"/>
+            <Image Source="{Binding DisplayedImage}" />
         </Border>
     </Grid>
 </Window>

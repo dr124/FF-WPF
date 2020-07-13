@@ -24,6 +24,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -67,7 +69,14 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Commands\Command.cs" />
-    <Compile Include="ViewModels\BaseViewModel.cs" />
+    <Compile Include="Converters\EnumBooleanConverter.cs" />
+    <Compile Include="Filters\FilterFactory.cs" />
+    <Compile Include="Filters\FilterParamConsumer.cs" />
+    <Compile Include="Filters\TestThresholdFilter.cs" />
+    <Compile Include="Models\FiltersEnum.cs" />
+    <Compile Include="Models\FilterParams.cs" />
+    <Compile Include="Models\TestThresholdParams.cs" />
+    <Compile Include="Models\ObservableObject.cs" />
     <Compile Include="Utils\ImageExtensions.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
@@ -102,9 +111,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Converters\" />
-    <Folder Include="Models\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

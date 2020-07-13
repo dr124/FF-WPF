@@ -1,32 +1,27 @@
-﻿using System.IO;
+﻿using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Windows.Media.Imaging;
 
 namespace FF_WPF.Utils
 {
     public static class ImageExtensions
     {
-        public static byte[] ToByteArray(this BitmapSource bitmap)
+        public static BitmapImage ToBitmapImage(this Bitmap bitmap)
         {
-            var encoder = new PngBitmapEncoder(); // or any other encoder
-            encoder.Frames.Add(BitmapFrame.Create(bitmap));
-
-            using (var ms = new MemoryStream())
+            using (var memory = new MemoryStream())
             {
-                encoder.Save(ms);
-                return ms.ToArray();
-            }
-        }
+                bitmap.Save(memory, ImageFormat.Png);
+                memory.Position = 0;
 
-        public static BitmapImage ToBitmapImage(this byte[] array)
-        {
-            using (var ms = new MemoryStream(array))
-            {
-                var image = new BitmapImage();
-                image.BeginInit();
-                image.CacheOption = BitmapCacheOption.OnLoad; // here
-                image.StreamSource = ms;
-                image.EndInit();
-                return image;
+                var bitmapImage = new BitmapImage();
+                bitmapImage.BeginInit();
+                bitmapImage.StreamSource = memory;
+                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                bitmapImage.EndInit();
+                bitmapImage.Freeze();
+
+                return bitmapImage;
             }
         }
     }

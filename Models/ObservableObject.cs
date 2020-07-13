@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 
 namespace FF_WPF.ViewModels
 {
-    public abstract class BaseViewModel : INotifyPropertyChanged
+    public abstract class ObservableObject : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
