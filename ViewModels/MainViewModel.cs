@@ -1,12 +1,18 @@
-﻿using System.Windows.Input;
+﻿using System;
+using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using FF_WPF.Commands;
+using FF_WPF.Utils;
 using Microsoft.Win32;
 
 namespace FF_WPF.ViewModels
 {
     public class MainViewModel : BaseViewModel
     {
+        private BitmapImage _image;
+
+        private BitmapImage _originalImage;
+
         public MainViewModel()
         {
             LoadImageCommand = new Command(LoadImage);
@@ -14,9 +20,15 @@ namespace FF_WPF.ViewModels
 
         public ICommand LoadImageCommand { get; }
 
+        public BitmapImage Image
+        {
+            get => _image;
+            set => SetProperty(ref _image, value);
+        }
+
         private void LoadImage(object obj)
         {
-            var openFileDialog = new OpenFileDialog()
+            var openFileDialog = new OpenFileDialog
             {
                 AddExtension = true,
                 CheckFileExists = true,
@@ -25,25 +37,14 @@ namespace FF_WPF.ViewModels
             };
             if (openFileDialog.ShowDialog() == true)
             {
-                var stream = openFileDialog.OpenFile();
                 var path = openFileDialog.FileName;
-                var b = new BitmapImage();
-                b.BeginInit();
-                b.StreamSource = stream;
-                b.CacheOption = BitmapCacheOption.OnLoad;
-                b.EndInit();
-                b.Freeze();
-                //var b = new BitmapImage(new Uri(path));
-                Image = b;
+
+                _originalImage = new BitmapImage(new Uri(path));
+
+                var pixels = _originalImage.ToByteArray();
+
+                Image = pixels.ToBitmapImage();
             }
-        }
-
-        private BitmapImage _image;
-
-        public BitmapImage Image
-        {
-            get => _image;
-            set => SetProperty(ref _image, value);
         }
     }
 }
