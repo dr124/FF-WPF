@@ -13,6 +13,8 @@ namespace FF_WPF.Filters
                     return new TestThresholdFilter();
                 case FiltersEnum.BradleyThresholding:
                     return new BradleysThresholdFilter();
+                case FiltersEnum.GaussianBlur:
+                    return new GaussianBlurFilter();
                 default:
                     throw new InvalidEnumArgumentException("This filter does not exist");
             }

@@ -19,6 +19,7 @@ namespace FF_WPF.ViewModels
             //todo automate this:
             TestThresholdParams.OnUpdate = ApplyFilter;
             BradleysThresholdParams.OnUpdate = ApplyFilter;
+            GaussianFilterParams.OnUpdate = ApplyFilter;
         }
 
         private void ApplyFilter(FilterParams p)
@@ -48,6 +49,7 @@ namespace FF_WPF.ViewModels
         //todo: use only one filter params
         public TestThresholdParams TestThresholdParams { get; } = new TestThresholdParams();
         public BradleysThresholdParams BradleysThresholdParams { get; } = new BradleysThresholdParams();
+        public GaussianBlurParams GaussianFilterParams { get; } = new GaussianBlurParams();
 
         private FiltersEnum _selectedFilter;
 
@@ -57,7 +59,11 @@ namespace FF_WPF.ViewModels
             set
             {
                 if (SetProperty(ref _selectedFilter, value))
+                {
                     _imageFilter = FilterFactory.GetFilter(value);
+                    _imageFilter = new GaussianBlurFilter();
+                    ApplyFilter(GaussianFilterParams);
+                }
             }
         }
 

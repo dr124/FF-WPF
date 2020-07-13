@@ -73,10 +73,12 @@
     <Compile Include="Filters\Implementations\BradleysThresholdFilter.cs" />
     <Compile Include="Filters\FilterFactory.cs" />
     <Compile Include="Filters\ImageFilter.cs" />
+    <Compile Include="Filters\Implementations\GaussianBlurFilter.cs" />
     <Compile Include="Filters\Implementations\TestThresholdFilter.cs" />
     <Compile Include="Filters\Implementations\BradleysThresholdParams.cs" />
     <Compile Include="Filters\FiltersEnum.cs" />
     <Compile Include="Filters\FilterParams.cs" />
+    <Compile Include="Filters\Implementations\GaussianBlurParams.cs" />
     <Compile Include="Filters\Implementations\TestThresholdParams.cs" />
     <Compile Include="ViewModels\ObservableObject.cs" />
     <Compile Include="Utils\ImageExtensions.cs" />
