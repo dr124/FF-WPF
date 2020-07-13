@@ -5,7 +5,7 @@ using FF_WPF.ViewModels;
 
 namespace FF_WPF.Filters
 {
-    public abstract class FilterParamConsumer
+    public abstract class ImageFilter
     {
         public abstract Bitmap Filter(Bitmap image, FilterParams param);
 

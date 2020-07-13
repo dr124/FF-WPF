@@ -70,15 +70,15 @@
     </Compile>
     <Compile Include="Commands\Command.cs" />
     <Compile Include="Converters\EnumBooleanConverter.cs" />
-    <Compile Include="Filters\BradleysThresholdFilter.cs" />
+    <Compile Include="Filters\Implementations\BradleysThresholdFilter.cs" />
     <Compile Include="Filters\FilterFactory.cs" />
-    <Compile Include="Filters\FilterParamConsumer.cs" />
-    <Compile Include="Filters\TestThresholdFilter.cs" />
-    <Compile Include="Models\BradleysThresholdParams.cs" />
-    <Compile Include="Models\FiltersEnum.cs" />
-    <Compile Include="Models\FilterParams.cs" />
-    <Compile Include="Models\TestThresholdParams.cs" />
-    <Compile Include="Models\ObservableObject.cs" />
+    <Compile Include="Filters\ImageFilter.cs" />
+    <Compile Include="Filters\Implementations\TestThresholdFilter.cs" />
+    <Compile Include="Filters\Implementations\BradleysThresholdParams.cs" />
+    <Compile Include="Filters\FiltersEnum.cs" />
+    <Compile Include="Filters\FilterParams.cs" />
+    <Compile Include="Filters\Implementations\TestThresholdParams.cs" />
+    <Compile Include="ViewModels\ObservableObject.cs" />
     <Compile Include="Utils\ImageExtensions.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
@@ -113,6 +113,8 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Models\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

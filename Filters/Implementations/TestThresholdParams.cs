@@ -1,6 +1,4 @@
-﻿using FF_WPF.ViewModels;
-
-namespace FF_WPF.Models
+﻿namespace FF_WPF.Filters.Implementations
 {
     public class TestThresholdParams : FilterParams
     {

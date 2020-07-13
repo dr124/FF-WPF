@@ -3,7 +3,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using FF_WPF.Commands;
 using FF_WPF.Filters;
-using FF_WPF.Models;
+using FF_WPF.Filters.Implementations;
 using FF_WPF.Utils;
 using Microsoft.Win32;
 
@@ -11,15 +11,19 @@ namespace FF_WPF.ViewModels
 {
     public class MainViewModel : ObservableObject
     {
-        private FilterParamConsumer _filter;
+        private ImageFilter _imageFilter;
 
         public MainViewModel()
         {
             LoadImageCommand = new Command(LoadImage);
-            TestThresholdParams.OnUpdate = p => 
-                DisplayedImage = _filter?.Filter(_originalImage, p).ToBitmapImage();
-            BradleysThresholdParams.OnUpdate = p => 
-                DisplayedImage = _filter?.Filter(_originalImage, p).ToBitmapImage();
+            //todo automate this:
+            TestThresholdParams.OnUpdate = ApplyFilter;
+            BradleysThresholdParams.OnUpdate = ApplyFilter;
+        }
+
+        private void ApplyFilter(FilterParams p)
+        {
+            DisplayedImage = _imageFilter?.Filter(_originalImage, p).ToBitmapImage();
         }
 
         private void LoadImage(object obj)
@@ -41,6 +45,7 @@ namespace FF_WPF.ViewModels
 
         public ICommand LoadImageCommand { get; }
 
+        //todo: use only one filter params
         public TestThresholdParams TestThresholdParams { get; } = new TestThresholdParams();
         public BradleysThresholdParams BradleysThresholdParams { get; } = new BradleysThresholdParams();
 
@@ -52,7 +57,7 @@ namespace FF_WPF.ViewModels
             set
             {
                 if (SetProperty(ref _selectedFilter, value))
-                    _filter = FilterFactory.GetFilter(value);
+                    _imageFilter = FilterFactory.GetFilter(value);
             }
         }
 

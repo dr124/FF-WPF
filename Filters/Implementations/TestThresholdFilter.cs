@@ -1,14 +1,12 @@
 ﻿using System.Drawing;
 using System.Drawing.Imaging;
-using FF_WPF.Models;
-using FF_WPF.ViewModels;
 
-namespace FF_WPF.Filters
+namespace FF_WPF.Filters.Implementations
 {
     /// <summary>
     /// This class was made to test if everything's alright. Like a ping->return pong or foo->return bar code
     /// </summary>
-    public class TestThresholdFilter : FilterParamConsumer
+    public class TestThresholdFilter : ImageFilter
     {
         public override Bitmap Filter(Bitmap image, FilterParams param)
         {

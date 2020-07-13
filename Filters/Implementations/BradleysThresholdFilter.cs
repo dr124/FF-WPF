@@ -1,15 +1,13 @@
 ﻿using System.Drawing;
 using System.Drawing.Imaging;
-using FF_WPF.Models;
-using FF_WPF.ViewModels;
 
-namespace FF_WPF.Filters
+namespace FF_WPF.Filters.Implementations
 {
     /// <summary>
     /// Bradley's Adaptive Threshold filter implementation based on
     /// http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.420.7883&rep=rep1&type=pdf
     /// </summary>
-    public class BradleysThresholdFilter : FilterParamConsumer
+    public class BradleysThresholdFilter : ImageFilter
     {
         public override Bitmap Filter(Bitmap image, FilterParams param)
         {

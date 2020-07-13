@@ -1,12 +1,11 @@
 ﻿using System.ComponentModel;
-using FF_WPF.Models;
-using FF_WPF.ViewModels;
+using FF_WPF.Filters.Implementations;
 
 namespace FF_WPF.Filters
 {
     public class FilterFactory
     {
-        public static FilterParamConsumer GetFilter(FiltersEnum selectedFilter)
+        public static ImageFilter GetFilter(FiltersEnum selectedFilter)
         {
             switch (selectedFilter)
             {

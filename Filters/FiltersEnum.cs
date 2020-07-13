@@ -1,4 +1,4 @@
-﻿namespace FF_WPF.Models
+﻿namespace FF_WPF.Filters
 {
     public enum FiltersEnum
     {

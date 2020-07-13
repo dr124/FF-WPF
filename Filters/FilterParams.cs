@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using FF_WPF.ViewModels;
 
-namespace FF_WPF.ViewModels
+namespace FF_WPF.Filters
 {
     public abstract class FilterParams : ObservableObject
     {
