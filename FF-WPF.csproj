@@ -70,9 +70,11 @@
     </Compile>
     <Compile Include="Commands\Command.cs" />
     <Compile Include="Converters\EnumBooleanConverter.cs" />
+    <Compile Include="Filters\BradleysThresholdFilter.cs" />
     <Compile Include="Filters\FilterFactory.cs" />
     <Compile Include="Filters\FilterParamConsumer.cs" />
     <Compile Include="Filters\TestThresholdFilter.cs" />
+    <Compile Include="Models\BradleysThresholdParams.cs" />
     <Compile Include="Models\FiltersEnum.cs" />
     <Compile Include="Models\FilterParams.cs" />
     <Compile Include="Models\TestThresholdParams.cs" />

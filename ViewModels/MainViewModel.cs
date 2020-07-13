@@ -16,7 +16,9 @@ namespace FF_WPF.ViewModels
         public MainViewModel()
         {
             LoadImageCommand = new Command(LoadImage);
-            TestThresholdParams.OnUpdate = p =>
+            TestThresholdParams.OnUpdate = p => 
+                DisplayedImage = _filter?.Filter(_originalImage, p).ToBitmapImage();
+            BradleysThresholdParams.OnUpdate = p => 
                 DisplayedImage = _filter?.Filter(_originalImage, p).ToBitmapImage();
         }
 
@@ -40,6 +42,7 @@ namespace FF_WPF.ViewModels
         public ICommand LoadImageCommand { get; }
 
         public TestThresholdParams TestThresholdParams { get; } = new TestThresholdParams();
+        public BradleysThresholdParams BradleysThresholdParams { get; } = new BradleysThresholdParams();
 
         private FiltersEnum _selectedFilter;
 

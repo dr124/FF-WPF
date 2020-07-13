@@ -12,6 +12,8 @@ namespace FF_WPF.Filters
             {
                 case FiltersEnum.TestThreshold:
                     return new TestThresholdFilter();
+                case FiltersEnum.BradleyThresholding:
+                    return new BradleysThresholdFilter();
                 default:
                     throw new InvalidEnumArgumentException("This filter does not exist");
             }

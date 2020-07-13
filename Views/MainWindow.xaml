@@ -40,8 +40,10 @@
             <!--bradleys threshold params-->
             <StackPanel
                 Visibility="{Binding IsChecked, ElementName=BradleyThresholdingRadioBtn, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <Label Content="bradley" />
-                <Slider />
+                <TextBlock FontSize="14" Text="{Binding BradleysThresholdParams.T, StringFormat=T {0}}" />
+                <Slider Minimum="0" Maximum="100" Value="{Binding BradleysThresholdParams.T}"/>
+                <TextBlock FontSize="14" Text="{Binding BradleysThresholdParams.S, StringFormat=S {0}}" />
+                <Slider Minimum="2" Maximum="30" IsSnapToTickEnabled="True" TickPlacement="BottomRight" TickFrequency="2" Value="{Binding BradleysThresholdParams.S}"/>
             </StackPanel>
 
             <!--gaussian blur params-->
