@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using System.Drawing.Imaging;
+using System.Threading;
 
 namespace FF_WPF.Filters.Implementations
 {
@@ -9,7 +10,7 @@ namespace FF_WPF.Filters.Implementations
     /// </summary>
     public class BradleysThresholdFilter : ImageFilter
     {
-        protected override Bitmap ProcessImage(Bitmap image, FilterParams param)
+        protected override Bitmap ProcessImage(Bitmap image, FilterParams param, CancellationToken ct)
         {
             var thrParams = (BradleysThresholdParams) param;
             var (outputImage, bitmapData) = CreateImage(image, ImageLockMode.ReadWrite);
@@ -27,6 +28,8 @@ namespace FF_WPF.Filters.Implementations
 
                     for (var j = 0; j < bitmapData.Width; ++j)
                     {
+                        ct.ThrowIfCancellationRequested();
+
                         var pixel = GetPixelPointer(scan0, i, j, bitmapData.Stride, channels);
                         sum += Magnitude(pixel);
 
@@ -41,6 +44,8 @@ namespace FF_WPF.Filters.Implementations
                 for (var i = 0; i < bitmapData.Height; ++i)
                 for (var j = 0; j < bitmapData.Width; ++j)
                 {
+                    ct.ThrowIfCancellationRequested();
+
                     var x1 = Between(1, i - s / 2, bitmapData.Height - 1);
                     var x2 = Between(1, i + s / 2, bitmapData.Height - 1);
                     var y1 = Between(1, j - s / 2, bitmapData.Width - 1);

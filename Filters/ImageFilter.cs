@@ -8,15 +8,15 @@ namespace FF_WPF.Filters
 {
     public abstract class ImageFilter
     {
-        public async Task<Bitmap> Filter(Bitmap image, FilterParams param)
+        public async Task<Bitmap> Filter(Bitmap image, FilterParams param, CancellationToken ct)
         {
             if (image == null || param == null)
                 return image; //todo: throw ex
 
-            return await Task.FromResult(ProcessImage(image, param));
+            return await Task.FromResult(ProcessImage(image, param, ct));
         }
 
-        protected abstract Bitmap ProcessImage(Bitmap image, FilterParams param);
+        protected abstract Bitmap ProcessImage(Bitmap image, FilterParams param, CancellationToken ct);
 
         protected byte GetBitsPerPixel(PixelFormat pixelFormat)
         {

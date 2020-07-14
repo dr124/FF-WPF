@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -13,14 +14,12 @@ namespace FF_WPF.ViewModels
 {
     public class MainViewModel : ObservableObject
     {
+        // maximum width or height before image is downscaled
+        private const int _maxImageWidthHeight = 1000;
+        private const int _downscaleTo = 500;
         private readonly Image.GetThumbnailImageAbort myCallback = ThumbnailCallback;
+        private CancellationTokenSource _cancellationTokenSource;
         private ImageFilter _imageFilter;
-
-        //todo: refactor this
-        public static bool ThumbnailCallback()
-        {
-            return false;
-        }
 
         public MainViewModel()
         {
@@ -31,16 +30,34 @@ namespace FF_WPF.ViewModels
             GaussianFilterParams.OnUpdate = ApplyFilter;
         }
 
+        //todo: refactor this
+        public static bool ThumbnailCallback()
+        {
+            return false;
+        }
+
         private void ApplyFilter(FilterParams p)
         {
+            _cancellationTokenSource?.Cancel();
+            _cancellationTokenSource = new CancellationTokenSource();
+            var ct = _cancellationTokenSource.Token;
+
             Task.Run(async () =>
             {
-                var smallImage = await _imageFilter.Filter(_smallImage, p);
-                DisplayedImage = smallImage.ToBitmapImage();
+                if (_smallImage != null)
+                {
+                    var smallImage = await _imageFilter.Filter(_smallImage, p, ct);
+                    DisplayedImage = smallImage.ToBitmapImage();
+                    // small delay so it doesnt give "epilepsy" when displaying
+                    // constantly altering smallImage and Image
+                    await Task.Delay(100, ct);
+                }
 
-                var image = await _imageFilter.Filter(_originalImage, p);
+                ct.ThrowIfCancellationRequested();
+
+                var image = await _imageFilter.Filter(_originalImage, p, ct);
                 DisplayedImage = image.ToBitmapImage();
-            });
+            }, ct);
         }
 
         private void LoadImage(object obj)
@@ -54,14 +71,15 @@ namespace FF_WPF.ViewModels
                 var path = openFileDialog.FileName;
                 _originalImage = new Bitmap(path);
 
-                const int maxSize = 500;
-                var k = (float) maxSize / Math.Max(_originalImage.Width, _originalImage.Height);
-                if (k < 1)
+                var widthHeight = Math.Max(_originalImage.Width, _originalImage.Height);
+                if (widthHeight > _maxImageWidthHeight)
+                {
+                    var k = (float)_downscaleTo / widthHeight;
                     _smallImage = (Bitmap) _originalImage.GetThumbnailImage(
-                        (int) (_originalImage.Width * k),
-                        (int) (_originalImage.Height * k),
+                        (int)(_originalImage.Width * k),
+                        (int)(_originalImage.Height * k),
                         myCallback, IntPtr.Zero);
-                else _smallImage = _originalImage;
+                } else _smallImage = null;
 
                 DisplayedImage = _originalImage.ToBitmapImage();
             }
@@ -83,10 +101,7 @@ namespace FF_WPF.ViewModels
             get => _selectedFilter;
             set
             {
-                if (SetProperty(ref _selectedFilter, value))
-                {
-                    _imageFilter = FilterFactory.GetFilter(value);
-                }
+                if (SetProperty(ref _selectedFilter, value)) _imageFilter = FilterFactory.GetFilter(value);
             }
         }
 

@@ -1,11 +1,12 @@
 ﻿using System.Drawing;
 using System.Drawing.Imaging;
+using System.Threading;
 
 namespace FF_WPF.Filters.Implementations
 {
     public class GaussianBlurFilter : ImageFilter
     {
-        protected override Bitmap ProcessImage(Bitmap image, FilterParams param)
+        protected override Bitmap ProcessImage(Bitmap image, FilterParams param, CancellationToken ct)
         {
             var gaussParams = (GaussianBlurParams) param;
 
@@ -19,12 +20,14 @@ namespace FF_WPF.Filters.Implementations
             unsafe
             {
                 var inScan0 = (byte*) inBitmapData.Scan0.ToPointer();
-                var outScan0 = (byte*)outBitmapData.Scan0.ToPointer();
+                var outScan0 = (byte*) outBitmapData.Scan0.ToPointer();
 
                 //for every pixel
                 for (var i = 0; i < inBitmapData.Height; ++i)
                 for (var j = 0; j < inBitmapData.Width; ++j)
                 {
+                    ct.ThrowIfCancellationRequested();
+
                     var currPixel = GetPixelPointer(outScan0, i, j, outBitmapData.Stride, channels);
 
                     //for every channel
@@ -39,7 +42,7 @@ namespace FF_WPF.Filters.Implementations
                         {
                             var ii = i + ki;
                             var jj = j + kj;
-                            if (ii < 0 || ii >= inBitmapData.Height || jj < 0 || jj >= inBitmapData.Width) 
+                            if (ii < 0 || ii >= inBitmapData.Height || jj < 0 || jj >= inBitmapData.Width)
                                 continue;
                             var kernelPixel = GetPixelPointer(inScan0, ii, jj, inBitmapData.Stride, channels);
                             var k = kernel[ki + kernelRadius][kj + kernelRadius];
