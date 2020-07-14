@@ -1,5 +1,5 @@
-﻿using System.Drawing;
 ﻿using System;
+using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -13,7 +13,14 @@ namespace FF_WPF.ViewModels
 {
     public class MainViewModel : ObservableObject
     {
+        private readonly Image.GetThumbnailImageAbort myCallback = ThumbnailCallback;
         private ImageFilter _imageFilter;
+
+        //todo: refactor this
+        public static bool ThumbnailCallback()
+        {
+            return false;
+        }
 
         public MainViewModel()
         {
@@ -28,6 +35,9 @@ namespace FF_WPF.ViewModels
         {
             Task.Run(async () =>
             {
+                var smallImage = await _imageFilter.Filter(_smallImage, p);
+                DisplayedImage = smallImage.ToBitmapImage();
+
                 var image = await _imageFilter.Filter(_originalImage, p);
                 DisplayedImage = image.ToBitmapImage();
             });
@@ -43,6 +53,15 @@ namespace FF_WPF.ViewModels
             {
                 var path = openFileDialog.FileName;
                 _originalImage = new Bitmap(path);
+
+                const int maxSize = 500;
+                var k = (float) maxSize / Math.Max(_originalImage.Width, _originalImage.Height);
+                if (k < 1)
+                    _smallImage = (Bitmap) _originalImage.GetThumbnailImage(
+                        (int) (_originalImage.Width * k),
+                        (int) (_originalImage.Height * k),
+                        myCallback, IntPtr.Zero);
+                else _smallImage = _originalImage;
 
                 DisplayedImage = _originalImage.ToBitmapImage();
             }
@@ -71,6 +90,7 @@ namespace FF_WPF.ViewModels
             }
         }
 
+        private Bitmap _smallImage;
         private Bitmap _originalImage;
 
         private ImageSource _displayedImage;
