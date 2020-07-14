@@ -1,4 +1,6 @@
 ﻿using System.Drawing;
+﻿using System;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
 using FF_WPF.Commands;
@@ -24,7 +26,11 @@ namespace FF_WPF.ViewModels
 
         private void ApplyFilter(FilterParams p)
         {
-            DisplayedImage = _imageFilter?.Filter(_originalImage, p).ToBitmapImage();
+            Task.Run(async () =>
+            {
+                var image = await _imageFilter.Filter(_originalImage, p);
+                DisplayedImage = image.ToBitmapImage();
+            });
         }
 
         private void LoadImage(object obj)

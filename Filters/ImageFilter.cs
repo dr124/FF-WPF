@@ -1,12 +1,22 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace FF_WPF.Filters
 {
     public abstract class ImageFilter
     {
-        public abstract Bitmap Filter(Bitmap image, FilterParams param);
+        public async Task<Bitmap> Filter(Bitmap image, FilterParams param)
+        {
+            if (image == null || param == null)
+                return image; //todo: throw ex
+
+            return await Task.FromResult(ProcessImage(image, param));
+        }
+
+        protected abstract Bitmap ProcessImage(Bitmap image, FilterParams param);
 
         protected byte GetBitsPerPixel(PixelFormat pixelFormat)
         {

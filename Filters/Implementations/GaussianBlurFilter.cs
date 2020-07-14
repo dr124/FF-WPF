@@ -5,7 +5,7 @@ namespace FF_WPF.Filters.Implementations
 {
     public class GaussianBlurFilter : ImageFilter
     {
-        public override Bitmap Filter(Bitmap image, FilterParams param)
+        protected override Bitmap ProcessImage(Bitmap image, FilterParams param)
         {
             var gaussParams = (GaussianBlurParams) param;
 

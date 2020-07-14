@@ -8,7 +8,7 @@ namespace FF_WPF.Filters.Implementations
     /// </summary>
     public class TestThresholdFilter : ImageFilter
     {
-        public override Bitmap Filter(Bitmap image, FilterParams param)
+        protected override Bitmap ProcessImage(Bitmap image, FilterParams param)
         {
             var thrParams = (TestThresholdParams) param;
             var (outputImage, bitmapData) = CreateImage(image, ImageLockMode.ReadWrite);
