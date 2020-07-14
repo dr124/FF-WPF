@@ -15,7 +15,7 @@ namespace FF_WPF.ViewModels
     public class MainViewModel : ObservableObject
     {
         // maximum width or height before image is downscaled
-        private const int _maxImageWidthHeight = 1000;
+        private const int _maxImageWidthHeight = 500;
         private const int _downscaleTo = 500;
         private readonly Image.GetThumbnailImageAbort myCallback = ThumbnailCallback;
         private CancellationTokenSource _cancellationTokenSource;
