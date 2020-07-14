@@ -4,19 +4,17 @@ using System.Drawing.Imaging;
 namespace FF_WPF.Filters.Implementations
 {
     /// <summary>
-    /// Bradley's Adaptive Threshold filter implementation based on
-    /// http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.420.7883&rep=rep1&type=pdf
+    ///     Bradley's Adaptive Threshold filter implementation based on
+    ///     http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.420.7883&rep=rep1&type=pdf
     /// </summary>
     public class BradleysThresholdFilter : ImageFilter
     {
         public override Bitmap Filter(Bitmap image, FilterParams param)
         {
             var thrParams = (BradleysThresholdParams) param;
-            var outputImage = new Bitmap(image);
-            var bitmapData = outputImage.LockBits(new Rectangle(0, 0, outputImage.Width, outputImage.Height),
-                ImageLockMode.ReadWrite, outputImage.PixelFormat);
-            var bitsPerPixel = GetBitsPerPixel(bitmapData.PixelFormat);
-            
+            var (outputImage, bitmapData) = CreateImage(image, ImageLockMode.ReadWrite);
+            var channels = GetBitsPerPixel(bitmapData.PixelFormat) / 8;
+
             unsafe
             {
                 var scan0 = (byte*) bitmapData.Scan0.ToPointer();
@@ -29,11 +27,8 @@ namespace FF_WPF.Filters.Implementations
 
                     for (var j = 0; j < bitmapData.Width; ++j)
                     {
-                        var data = scan0 + i * bitmapData.Stride + j * bitsPerPixel / 8;
-
-                        var magnitude = (data[0] + data[1] + data[2]) / 3;
-
-                        sum += magnitude;
+                        var pixel = GetPixelPointer(scan0, i, j, bitmapData.Stride, channels);
+                        sum += Magnitude(pixel);
 
                         if (i == 0) intImg[i][j] = sum;
                         else intImg[i][j] = intImg[i - 1][j] + sum;
@@ -53,13 +48,12 @@ namespace FF_WPF.Filters.Implementations
                     var count = (x2 - x1) * (y2 - y1);
                     var sum = intImg[x2][y2] - intImg[x2][y1 - 1] - intImg[x1 - 1][y2] + intImg[x1 - 1][y1 - 1];
 
-                    var data = scan0 + i * bitmapData.Stride + j * bitsPerPixel / 8;
-                    var magnitude = (data[0] + data[1] + data[2]) / 3;
+                    var pixel = GetPixelPointer(scan0, i, j, bitmapData.Stride, channels);
 
-                    if (magnitude * count <= sum * (100 - t) / 100.0)
-                        data[0] = data[1] = data[2] = 0;
+                    if (Magnitude(pixel) * count <= sum * (100 - t) / 100.0)
+                        pixel[0] = pixel[1] = pixel[2] = 0;
                     else
-                        data[0] = data[1] = data[2] = 255;
+                        pixel[0] = pixel[1] = pixel[2] = 255;
                 }
             }
 

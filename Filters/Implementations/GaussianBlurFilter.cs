@@ -9,15 +9,9 @@ namespace FF_WPF.Filters.Implementations
         {
             var gaussParams = (GaussianBlurParams) param;
 
-            var inputImage = new Bitmap(image);
-            var outputImage = new Bitmap(image);
-            
-            var outBitmapData = outputImage.LockBits(new Rectangle(0, 0, outputImage.Width, outputImage.Height),
-                ImageLockMode.WriteOnly, outputImage.PixelFormat);
-            var inBitmapData = inputImage.LockBits(new Rectangle(0, 0, outputImage.Width, outputImage.Height),
-                ImageLockMode.ReadWrite, outputImage.PixelFormat);
-            
-            var bitsPerPixel = GetBitsPerPixel(inBitmapData.PixelFormat);
+            var (outputImage, outBitmapData) = CreateImage(image, ImageLockMode.WriteOnly);
+            var (inputImage, inBitmapData) = CreateImage(image, ImageLockMode.ReadOnly);
+            var channels = GetBitsPerPixel(inBitmapData.PixelFormat) / 8;
 
             var kernel = gaussParams.Kernel;
             var kernelRadius = gaussParams.Kernel.Length / 2;
@@ -31,7 +25,7 @@ namespace FF_WPF.Filters.Implementations
                 for (var i = 0; i < inBitmapData.Height; ++i)
                 for (var j = 0; j < inBitmapData.Width; ++j)
                 {
-                    var currPixel = outScan0 + i * outBitmapData.Stride + j * bitsPerPixel / 8;
+                    var currPixel = GetPixelPointer(outScan0, i, j, outBitmapData.Stride, channels);
 
                     //for every channel
                     for (var c = 0; c < 3; c++)
@@ -45,9 +39,9 @@ namespace FF_WPF.Filters.Implementations
                         {
                             var ii = i + ki;
                             var jj = j + kj;
-                            if (ii < 0 || ii >= inBitmapData.Height || jj < 0 || jj >= inBitmapData.Width)
+                            if (ii < 0 || ii >= inBitmapData.Height || jj < 0 || jj >= inBitmapData.Width) 
                                 continue;
-                            var kernelPixel = inScan0 + ii * inBitmapData.Stride + (j + kj) * bitsPerPixel / 8;
+                            var kernelPixel = GetPixelPointer(inScan0, ii, jj, inBitmapData.Stride, channels);
                             var k = kernel[ki + kernelRadius][kj + kernelRadius];
                             kernelSum += k;
                             pixelSum += kernelPixel[c] * k;

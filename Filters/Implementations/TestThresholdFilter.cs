@@ -11,10 +11,8 @@ namespace FF_WPF.Filters.Implementations
         public override Bitmap Filter(Bitmap image, FilterParams param)
         {
             var thrParams = (TestThresholdParams) param;
-            var outputImage = new Bitmap(image);
-            var bitmapData = outputImage.LockBits(new Rectangle(0, 0, outputImage.Width, outputImage.Height),
-                ImageLockMode.ReadWrite, outputImage.PixelFormat);
-            var bitsPerPixel = GetBitsPerPixel(bitmapData.PixelFormat);
+            var (outputImage, bitmapData) = CreateImage(image, ImageLockMode.ReadWrite);
+            var channels = GetBitsPerPixel(bitmapData.PixelFormat) / 8;
 
             unsafe
             {
@@ -23,13 +21,12 @@ namespace FF_WPF.Filters.Implementations
                 for (var i = 0; i < bitmapData.Height; ++i)
                 for (var j = 0; j < bitmapData.Width; ++j)
                 {
-                    var data = scan0 + i * bitmapData.Stride + j * bitsPerPixel / 8;
+                    var pixel = GetPixelPointer(scan0, i, j, bitmapData.Stride, channels);
 
-                    var magnitude = (data[0] + data[1] + data[2]) / 3f / 255;
-                    if (magnitude < thrParams.Ratio)
-                        data[0] = data[1] = data[2] = 0;
+                    if (Magnitude(pixel)/255f < thrParams.Ratio)
+                        pixel[0] = pixel[1] = pixel[2] = 0;
                     else
-                        data[0] = data[1] = data[2] = 255;
+                        pixel[0] = pixel[1] = pixel[2] = 255;
                 }
             }
 

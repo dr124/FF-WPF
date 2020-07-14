@@ -61,8 +61,6 @@ namespace FF_WPF.ViewModels
                 if (SetProperty(ref _selectedFilter, value))
                 {
                     _imageFilter = FilterFactory.GetFilter(value);
-                    _imageFilter = new GaussianBlurFilter();
-                    ApplyFilter(GaussianFilterParams);
                 }
             }
         }

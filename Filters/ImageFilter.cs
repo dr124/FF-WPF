@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
-using FF_WPF.ViewModels;
 
 namespace FF_WPF.Filters
 {
@@ -22,6 +21,28 @@ namespace FF_WPF.Filters
                 default:
                     throw new ArgumentException("Only 24 and 32 bit images are supported");
             }
+        }
+
+        protected BitmapData LockBits(Bitmap image, ImageLockMode lockMode)
+        {
+            var rect = new Rectangle(0, 0, image.Width, image.Height);
+            return image.LockBits(rect, lockMode, image.PixelFormat);
+        }
+
+        protected (Bitmap, BitmapData) CreateImage(Bitmap image, ImageLockMode lockMode)
+        {
+            var newImage = new Bitmap(image);
+            return (newImage, LockBits(newImage, lockMode));
+        }
+
+        protected unsafe int Magnitude(byte* pixel)
+        {
+            return (pixel[0] + pixel[1] + pixel[2])/3;
+        }
+
+        protected unsafe byte* GetPixelPointer(byte* basePointer, int y, int x, int stride, int channels)
+        {
+            return basePointer + y * stride + x * channels;
         }
     }
 }
