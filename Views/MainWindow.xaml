@@ -51,8 +51,9 @@
                 <Label Content="gauss" />
                 <Slider />
             </StackPanel>
-
         </StackPanel>
+
+        <ProgressBar Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}" IsIndeterminate="True" Height="10" VerticalAlignment="Bottom" Margin="10"/> 
         <Border Margin="10,10,10,10" BorderThickness="1" BorderBrush="Black" Grid.Column="1">
             <Image Source="{Binding DisplayedImage}" />
         </Border>

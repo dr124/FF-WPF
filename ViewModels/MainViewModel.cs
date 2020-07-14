@@ -14,7 +14,7 @@ namespace FF_WPF.ViewModels
     public class MainViewModel : ObservableObject
     {
         // maximum width or height before image is downscaled
-        private const int _maxImageWidthHeight = 500;
+        private const int _maxImageWidthHeight = 1500;
         private const int _downscaleTo = 500;
         private readonly Image.GetThumbnailImageAbort myCallback = ThumbnailCallback;
         private CancellationTokenSource _cancellationTokenSource;
@@ -33,6 +33,7 @@ namespace FF_WPF.ViewModels
 
         private void ApplyFilter(FilterParams p)
         {
+            IsBusy = true;
             _cancellationTokenSource?.Cancel();
             _cancellationTokenSource = new CancellationTokenSource();
             var ct = _cancellationTokenSource.Token;
@@ -42,7 +43,7 @@ namespace FF_WPF.ViewModels
                 if (_smallImage != null)
                 {
                     var smallImage = await _imageFilter.Filter(_smallImage, p, ct);
-                    DisplayedImage = smallImage.ToBitmapImage();
+                    DisplayedImage = smallImage.ToImageSource();
                     // small delay so it doesnt give "epilepsy" when displaying
                     // constantly altering smallImage and Image
                     await Task.Delay(100, ct);
@@ -51,12 +52,15 @@ namespace FF_WPF.ViewModels
                 ct.ThrowIfCancellationRequested();
 
                 var image = await _imageFilter.Filter(_originalImage, p, ct);
-                DisplayedImage = image.ToBitmapImage();
+                DisplayedImage = image.ToImageSource();
+                IsBusy = false;
             }, ct);
+
         }
 
         private void LoadImage(object obj)
         {
+            IsBusy = true;
             var openFileDialog = new OpenFileDialog
             {
                 Filter = "Image files |*.jpeg;*.jpg;*.gif;*.png;*.bmp"
@@ -76,8 +80,10 @@ namespace FF_WPF.ViewModels
                         myCallback, IntPtr.Zero);
                 } else _smallImage = null;
 
-                DisplayedImage = _originalImage.ToBitmapImage();
+                DisplayedImage = _originalImage.ToImageSource();
             }
+
+            IsBusy = false;
         }
 
         #region properties
@@ -116,6 +122,13 @@ namespace FF_WPF.ViewModels
         {
             get => _displayedImage;
             set => SetProperty(ref _displayedImage, value);
+        }
+
+        private bool _isBusy;
+        public bool IsBusy
+        {
+            get => _isBusy;
+            set => SetProperty(ref _isBusy, value);
         }
 
         #endregion
