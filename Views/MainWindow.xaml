@@ -31,19 +31,18 @@
             <Separator Height="10" />
 
             <!--test threshold params-->
-            <StackPanel
-                Visibility="{Binding IsChecked, ElementName=TestThresholdRadioBtn, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <TextBlock FontSize="14" Text="{Binding TestThresholdParams.Ratio, StringFormat=Threshold {0:0.00}}" />
+            <StackPanel Visibility="{Binding IsChecked, ElementName=TestThresholdRadioBtn, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <TextBlock FontSize="14" Text="{Binding FilterParams.Ratio, StringFormat=Threshold {0:0.00}}" />
                 <Slider Minimum="0" Maximum="1" TickFrequency="0.1" TickPlacement="BottomRight"
-                        Value="{Binding TestThresholdParams.Ratio}" />
+                        Value="{Binding FilterParams.Ratio}" />
             </StackPanel>
             <!--bradleys threshold params-->
             <StackPanel
                 Visibility="{Binding IsChecked, ElementName=BradleyThresholdingRadioBtn, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <TextBlock FontSize="14" Text="{Binding BradleysThresholdParams.T, StringFormat=T {0}}" />
-                <Slider Minimum="0" Maximum="100" Value="{Binding BradleysThresholdParams.T}"/>
-                <TextBlock FontSize="14" Text="{Binding BradleysThresholdParams.S, StringFormat=S {0}}" />
-                <Slider Minimum="2" Maximum="30" IsSnapToTickEnabled="True" TickPlacement="BottomRight" TickFrequency="2" Value="{Binding BradleysThresholdParams.S}"/>
+                <TextBlock FontSize="14" Text="{Binding FilterParams.T, StringFormat=T {0}}" />
+                <Slider Minimum="0" Maximum="100" Value="{Binding FilterParams.T}"/>
+                <TextBlock FontSize="14" Text="{Binding FilterParams.S, StringFormat=S {0}}" />
+                <Slider Minimum="2" Maximum="30" IsSnapToTickEnabled="True" TickPlacement="BottomRight" TickFrequency="2" Value="{Binding FilterParams.S}"/>
             </StackPanel>
 
             <!--gaussian blur params-->

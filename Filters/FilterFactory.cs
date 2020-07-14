@@ -5,16 +5,16 @@ namespace FF_WPF.Filters
 {
     public class FilterFactory
     {
-        public static ImageFilter GetFilter(FiltersEnum selectedFilter)
+        public static (ImageFilter, FilterParams) GetFilter(FiltersEnum selectedFilter)
         {
             switch (selectedFilter)
             {
                 case FiltersEnum.TestThreshold:
-                    return new TestThresholdFilter();
+                    return (new TestThresholdFilter(), new TestThresholdParams());
                 case FiltersEnum.BradleyThresholding:
-                    return new BradleysThresholdFilter();
+                    return (new BradleysThresholdFilter(), new BradleysThresholdParams());
                 case FiltersEnum.GaussianBlur:
-                    return new GaussianBlurFilter();
+                    return (new GaussianBlurFilter(), new GaussianBlurParams());
                 default:
                     throw new InvalidEnumArgumentException("This filter does not exist");
             }
