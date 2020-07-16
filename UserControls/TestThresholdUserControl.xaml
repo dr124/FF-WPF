@@ -1,0 +1,14 @@
+﻿<UserControl x:Class="FF_WPF.UserControls.TestThresholdUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:FF_WPF.UserControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="182.346" d:DesignWidth="258.294">
+    <StackPanel>
+        <TextBlock FontSize="14" Text="{Binding FilterParams.Ratio, StringFormat=Threshold {0:0.00}}" />
+        <Slider Minimum="0" Maximum="1" TickFrequency="0.1" TickPlacement="BottomRight"
+                Value="{Binding FilterParams.Ratio}" />
+    </StackPanel>
+</UserControl>

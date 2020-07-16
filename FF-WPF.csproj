@@ -62,6 +62,18 @@
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
+    <Page Include="UserControls\BradleysThresholdUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\GaussianBlurUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\TestThresholdUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -82,6 +94,15 @@
     <Compile Include="Filters\FilterParams.cs" />
     <Compile Include="Filters\Implementations\GaussianBlurParams.cs" />
     <Compile Include="Filters\Implementations\TestThresholdParams.cs" />
+    <Compile Include="UserControls\BradleysThresholdUserControl.xaml.cs">
+      <DependentUpon>BradleysThresholdUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\GaussianBlurUserControl.xaml.cs">
+      <DependentUpon>GaussianBlurUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\TestThresholdUserControl.xaml.cs">
+      <DependentUpon>TestThresholdUserControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModels\ObservableObject.cs" />
     <Compile Include="Utils\ImageExtensions.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
