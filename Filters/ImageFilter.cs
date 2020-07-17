@@ -47,20 +47,12 @@ namespace FF_WPF.Filters
 
         protected unsafe int Magnitude(byte* pixel)
         {
-            return (pixel[0] + pixel[1] + pixel[2])/3;
+            return (pixel[0] + pixel[1] + pixel[2]) / 3;
         }
 
         protected unsafe byte* GetPixelPointer(byte* basePointer, int y, int x, int stride, int channels)
         {
             return basePointer + y * stride + x * channels;
-        }
-    }
-
-    public class NoFilter : ImageFilter
-    {
-        protected override Bitmap ProcessImage(Bitmap image, FilterParams param, CancellationToken ct)
-        {
-            return image;
         }
     }
 }

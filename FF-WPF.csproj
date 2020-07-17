@@ -95,6 +95,7 @@
     <Compile Include="Filters\FilterParams.cs" />
     <Compile Include="Filters\Implementations\GaussianBlurParams.cs" />
     <Compile Include="Filters\Implementations\TestThresholdParams.cs" />
+    <Compile Include="Filters\NoFilter.cs" />
     <Compile Include="UserControls\BradleysThresholdUserControl.xaml.cs">
       <DependentUpon>BradleysThresholdUserControl.xaml</DependentUpon>
     </Compile>

@@ -18,6 +18,7 @@ namespace FF_WPF.ViewModels
         // maximum width or height before image is downscaled
         private const int _maxImageWidthHeight = 1500;
         private const int _downscaleTo = 500;
+
         private CancellationTokenSource _cancellationTokenSource;
         private ImageFilter _imageFilter = new NoFilter();
 
@@ -133,7 +134,6 @@ namespace FF_WPF.ViewModels
         public ICommand ProcessImageCommand { get; }
 
         private FilterParams _filterParams;
-
         public FilterParams FilterParams
         {
             get => _filterParams;
@@ -141,7 +141,6 @@ namespace FF_WPF.ViewModels
         }
 
         private FiltersEnum _selectedFilter;
-
         public FiltersEnum SelectedFilter
         {
             get => _selectedFilter;
@@ -161,7 +160,6 @@ namespace FF_WPF.ViewModels
         private Bitmap _originalImage;
 
         private Bitmap _displayedImage;
-
         public Bitmap DisplayedImage
         {
             get => _displayedImage;
@@ -169,7 +167,6 @@ namespace FF_WPF.ViewModels
         }
 
         private bool _isBusy;
-
         public bool IsBusy
         {
             get => _isBusy;
@@ -177,7 +174,6 @@ namespace FF_WPF.ViewModels
         }
 
         private bool _isPreview;
-
         public bool IsPreview
         {
             get => _isPreview;
@@ -185,7 +181,6 @@ namespace FF_WPF.ViewModels
         }
 
         private bool _isImageLoaded;
-
         public bool IsImageLoaded
         {
             get => _isImageLoaded;
