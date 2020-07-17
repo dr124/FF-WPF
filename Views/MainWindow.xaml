@@ -38,12 +38,12 @@
             </GroupBox>
             <GroupBox IsEnabled="{Binding IsImageLoaded}" Header="Filter parameters">
                 <StackPanel>
-                    <uc:TestThresholdUserControl FilterParams="{Binding FilterParams}"
-                                                 Visibility="{Binding IsChecked, ElementName=TestThresholdRadioBtn, Converter={StaticResource BooleanToVisibilityConverter}}" />
-                    <uc:BradleysThresholdUserControl FilterParams="{Binding FilterParams}"
-                                                     Visibility="{Binding IsChecked, ElementName=BradleyThresholdingRadioBtn, Converter={StaticResource BooleanToVisibilityConverter}}" />
-                    <uc:GaussianBlurUserControl FilterParams="{Binding FilterParams}"
-                                                Visibility="{Binding IsChecked, ElementName=GaussianBlurRadioBtn, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                    <uc:TestThresholdUserControl
+                        Visibility="{Binding IsChecked, ElementName=TestThresholdRadioBtn, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                    <uc:BradleysThresholdUserControl
+                        Visibility="{Binding IsChecked, ElementName=BradleyThresholdingRadioBtn, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                    <uc:GaussianBlurUserControl
+                        Visibility="{Binding IsChecked, ElementName=GaussianBlurRadioBtn, Converter={StaticResource BooleanToVisibilityConverter}}" />
                 </StackPanel>
             </GroupBox>
         </StackPanel>

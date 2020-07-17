@@ -11,14 +11,5 @@ namespace FF_WPF.UserControls
             InitializeComponent();
         }
 
-        public static readonly DependencyProperty FilterParamsProperty = DependencyProperty.Register(
-            "FilterParams", typeof(GaussianBlurParams), typeof(GaussianBlurUserControl),
-            new PropertyMetadata(default(GaussianBlurParams)));
-
-        public GaussianBlurParams FilterParams
-        {
-            get => (GaussianBlurParams) GetValue(FilterParamsProperty);
-            set => SetValue(FilterParamsProperty, value);
-        }
     }
 }

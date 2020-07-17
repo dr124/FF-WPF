@@ -10,15 +10,5 @@ namespace FF_WPF.UserControls
         {
             InitializeComponent();
         }
-
-        public static readonly DependencyProperty FilterParamsProperty = DependencyProperty.Register(
-            "FilterParams", typeof(BradleysThresholdParams), typeof(BradleysThresholdUserControl),
-            new PropertyMetadata(default(BradleysThresholdParams)));
-
-        public BradleysThresholdParams FilterParams
-        {
-            get => (BradleysThresholdParams) GetValue(FilterParamsProperty);
-            set => SetValue(FilterParamsProperty, value);
-        }
     }
 }
