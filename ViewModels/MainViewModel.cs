@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Drawing;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using FF_WPF.Commands;
 using FF_WPF.Filters;
+using FF_WPF.Filters.Implementations;
 using FF_WPF.Utils;
 using Microsoft.Win32;
 
@@ -16,11 +19,14 @@ namespace FF_WPF.ViewModels
         private const int _maxImageWidthHeight = 1500;
         private const int _downscaleTo = 500;
         private CancellationTokenSource _cancellationTokenSource;
-        private ImageFilter _imageFilter;
+        private ImageFilter _imageFilter = new NoFilter();
 
         public MainViewModel()
         {
             LoadImageCommand = new Command(LoadImage);
+            LoadKernelCommand = new Command(LoadKernel);
+            SaveKernelCommand = new Command(SaveKernel);
+            ProcessImageCommand = new Command(o => ApplyFilter(FilterParams));
         }
 
         private void ApplyFilter(FilterParams p)
@@ -76,6 +82,7 @@ namespace FF_WPF.ViewModels
                     _smallImage = null;
                 }
 
+                IsImageLoaded = true;
                 DisplayedImage = _originalImage;
                 ApplyFilter(FilterParams);
             }
@@ -83,10 +90,47 @@ namespace FF_WPF.ViewModels
             IsBusy = false;
         }
 
+        #region kernel load save
+
+        private void LoadKernel(object obj)
+        {
+            var openFileDialog = new OpenFileDialog
+            {
+                Filter = "Kernel | *.kernel"
+            };
+            if (openFileDialog.ShowDialog() == true)
+                using (var stream = new FileStream(openFileDialog.FileName, FileMode.Open))
+                {
+                    var bformatter = new BinaryFormatter();
+                    var kernel = (float[][]) bformatter.Deserialize(stream);
+                    ((GaussianBlurParams) FilterParams).Kernel = kernel;
+                    OnPropertyChanged(nameof(FilterParams));
+                }
+        }
+
+        private void SaveKernel(object obj)
+        {
+            var saveFileDialog = new SaveFileDialog
+            {
+                Filter = "Kernel | *.kernel"
+            };
+
+            if (saveFileDialog.ShowDialog() == true)
+                using (var stream = new FileStream(saveFileDialog.FileName, FileMode.Create))
+                {
+                    var bformatter = new BinaryFormatter();
+                    bformatter.Serialize(stream, ((GaussianBlurParams) FilterParams).Kernel);
+                }
+        }
+
+        #endregion
+
         #region properties
 
+        public ICommand LoadKernelCommand { get; }
         public ICommand LoadImageCommand { get; }
-
+        public ICommand SaveKernelCommand { get; }
+        public ICommand ProcessImageCommand { get; }
 
         private FilterParams _filterParams;
 
@@ -138,6 +182,14 @@ namespace FF_WPF.ViewModels
         {
             get => _isPreview;
             set => SetProperty(ref _isPreview, value);
+        }
+
+        private bool _isImageLoaded;
+
+        public bool IsImageLoaded
+        {
+            get => _isImageLoaded;
+            set => SetProperty(ref _isImageLoaded, value);
         }
 
         #endregion

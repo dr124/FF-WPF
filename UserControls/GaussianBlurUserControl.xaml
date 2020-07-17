@@ -4,30 +4,45 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:FF_WPF.UserControls"
+             xmlns:conv="clr-namespace:FF_WPF.Converters"
              mc:Ignorable="d"
-             d:DesignHeight="168.483" d:DesignWidth="258.294">
+             d:DesignHeight="217.483" d:DesignWidth="337.294">
+    <UserControl.Resources>
+        <Style TargetType="TextBox">
+            <Setter Property="Width" Value="40px" />
+            <Setter Property="Height" Value="40px" />
+            <Setter Property="Margin" Value="4px" />
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Margin" Value="4px" />
+        </Style>
+    </UserControl.Resources>
     <StackPanel>
-        <Label Content="gauss" />
-        <ItemsControl
-            ItemsSource="{Binding FilterParams.Kernel, Mode=TwoWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <ItemsControl ItemsSource="{Binding Path=., Mode=TwoWay}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <TextBox
-                                    Text="{Binding Path=., Mode=TwoWay, NotifyOnTargetUpdated=True, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" />
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel Orientation="Horizontal" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                    </ItemsControl>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-        <Slider />
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Button x:Name="LoadKernelBtn" Content="Load kernel" Command="{Binding LoadKernelCommand}" />
+            <Button x:Name="SaveKernelBtn" Grid.Column="1" Content="Save kernel" Command="{Binding SaveKernelCommand}" />
+        </Grid>
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Left">
+            <StackPanel Orientation="Horizontal">
+                <TextBox Text="{Binding FilterParams.Kernel[0][0]}" />
+                <TextBox Text="{Binding FilterParams.Kernel[0][1]}" />
+                <TextBox Text="{Binding FilterParams.Kernel[0][2]}" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBox Text="{Binding FilterParams.Kernel[1][0]}" />
+                <TextBox Text="{Binding FilterParams.Kernel[1][1]}" />
+                <TextBox Text="{Binding FilterParams.Kernel[1][2]}" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBox Text="{Binding FilterParams.Kernel[2][0]}" />
+                <TextBox Text="{Binding FilterParams.Kernel[2][1]}" />
+                <TextBox Text="{Binding FilterParams.Kernel[2][2]}" />
+            </StackPanel>
+        </StackPanel>
+        <Button Content="Process image" Command="{Binding ProcessImageCommand}" />
     </StackPanel>
 </UserControl>

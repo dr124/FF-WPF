@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+// ReSharper disable CompareOfFloatsByEqualityOperator
+
 namespace FF_WPF.Filters.Implementations
 {
     public class GaussianBlurFilter : ImageFilter
@@ -11,7 +13,6 @@ namespace FF_WPF.Filters.Implementations
         protected override Bitmap ProcessImage(Bitmap image, FilterParams param, CancellationToken ct)
         {
             var gaussParams = (GaussianBlurParams) param;
-
             var (outputImage, outBitmapData) = CreateImage(image, ImageLockMode.WriteOnly);
             var (inputImage, inBitmapData) = CreateImage(image, ImageLockMode.ReadOnly);
             var channels = GetBitsPerPixel(inBitmapData.PixelFormat) / 8;
@@ -28,7 +29,6 @@ namespace FF_WPF.Filters.Implementations
                 //for every pixel
                 Parallel.For(0, inBitmapData.Height, i =>
                 {
-                    //for (var i = 0; i < inBitmapData.Height; ++i)
                     for (var j = 0; j < inBitmapData.Width; ++j)
                     {
                         ct.ThrowIfCancellationRequested();
@@ -59,7 +59,7 @@ namespace FF_WPF.Filters.Implementations
 
                             //todo: if kernelsum is 0 then normalize
                             if (kernelSum == 0) kernelSum = 1; //if kernel == 0 (for eg. edge detection)
-                            currPixel[c] = (byte) (pixelSum / kernelSum);
+                            currPixel[c] = GetByteValue(pixelSum / kernelSum);
                         }
                     }
                 });
@@ -69,6 +69,14 @@ namespace FF_WPF.Filters.Implementations
 
                 return outputImage;
             }
+        }
+
+
+        private byte GetByteValue(float val)
+        {
+            if (val > 255) return 255;
+            if (val < 0) return 0;
+            return (byte) val;
         }
     }
 }

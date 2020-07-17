@@ -20,27 +20,32 @@
         </Grid.ColumnDefinitions>
         <StackPanel Margin="10">
             <Button Command="{Binding LoadImageCommand}" Content="Load image" />
-            <Separator Height="10" />
-            <RadioButton
-                IsChecked="{Binding SelectedFilter, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=NoFilter}"
-                x:Name="NoFilterRadioBtn" Content="No filter" />
-            <RadioButton
-                IsChecked="{Binding SelectedFilter, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=TestThreshold}"
-                x:Name="TestThresholdRadioBtn" Content="TestThreshold" />
-            <RadioButton
-                IsChecked="{Binding SelectedFilter, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=BradleyThresholding}"
-                x:Name="BradleyThresholdingRadioBtn" Content="Bradley's thresholding" />
-            <RadioButton
-                IsChecked="{Binding SelectedFilter, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=GaussianBlur}"
-                x:Name="GaussianBlurRadioBtn" Content="Gaussian blur" />
-            <Separator Height="10" />
-
-            <uc:TestThresholdUserControl FilterParams="{Binding FilterParams}"
-                                         Visibility="{Binding IsChecked, ElementName=TestThresholdRadioBtn, Converter={StaticResource BooleanToVisibilityConverter}}" />
-            <uc:BradleysThresholdUserControl FilterParams="{Binding FilterParams}"
-                                             Visibility="{Binding IsChecked, ElementName=BradleyThresholdingRadioBtn, Converter={StaticResource BooleanToVisibilityConverter}}" />
-            <uc:GaussianBlurUserControl FilterParams="{Binding FilterParams}"
-                                        Visibility="{Binding IsChecked, ElementName=GaussianBlurRadioBtn, Converter={StaticResource BooleanToVisibilityConverter}}" />
+            <GroupBox IsEnabled="{Binding IsImageLoaded}" Header="Select filter">
+                <StackPanel>
+                    <RadioButton Margin="0,5,0,0"
+                                 IsChecked="{Binding SelectedFilter, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=NoFilter}"
+                                 x:Name="NoFilterRadioBtn" Content="No filter" />
+                    <RadioButton
+                        IsChecked="{Binding SelectedFilter, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=TestThreshold}"
+                        x:Name="TestThresholdRadioBtn" Content="TestThreshold" />
+                    <RadioButton
+                        IsChecked="{Binding SelectedFilter, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=BradleyThresholding}"
+                        x:Name="BradleyThresholdingRadioBtn" Content="Bradley's thresholding" />
+                    <RadioButton
+                        IsChecked="{Binding SelectedFilter, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=GaussianBlur}"
+                        x:Name="GaussianBlurRadioBtn" Content="Gaussian blur" />
+                </StackPanel>
+            </GroupBox>
+            <GroupBox IsEnabled="{Binding IsImageLoaded}" Header="Filter parameters">
+                <StackPanel>
+                    <uc:TestThresholdUserControl FilterParams="{Binding FilterParams}"
+                                                 Visibility="{Binding IsChecked, ElementName=TestThresholdRadioBtn, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                    <uc:BradleysThresholdUserControl FilterParams="{Binding FilterParams}"
+                                                     Visibility="{Binding IsChecked, ElementName=BradleyThresholdingRadioBtn, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                    <uc:GaussianBlurUserControl FilterParams="{Binding FilterParams}"
+                                                Visibility="{Binding IsChecked, ElementName=GaussianBlurRadioBtn, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                </StackPanel>
+            </GroupBox>
         </StackPanel>
 
         <ProgressBar Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}"
@@ -48,7 +53,10 @@
         <Border Margin="10,10,10,10" BorderThickness="1" BorderBrush="Black" Grid.Column="1">
             <Image Source="{Binding DisplayedImage, Converter={StaticResource BitmapToImageSourceConverter}}" />
         </Border>
-        <Label Content="Preview (generating full size image)" Visibility="{Binding IsPreview, Converter={StaticResource BooleanToVisibilityConverter}}" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="28" Width="201"/>
+        <Label Content="Preview (generating full size image)"
+               Visibility="{Binding IsPreview, Converter={StaticResource BooleanToVisibilityConverter}}"
+               Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="28"
+               Width="201" />
 
     </Grid>
 </Window>
