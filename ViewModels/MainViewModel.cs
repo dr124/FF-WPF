@@ -49,7 +49,7 @@ namespace FF_WPF.ViewModels
                     await Task.Delay(100, ct);
                 }
 
-                ct.ThrowIfCancellationRequested();
+                ct.ThrowIfCancellationRequested(); //no need to catch this or other ct exceptions in this case
 
                 var image = await _imageFilter.Filter(_originalImage, p, ct);
 
