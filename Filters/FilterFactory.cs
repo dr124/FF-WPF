@@ -9,6 +9,8 @@ namespace FF_WPF.Filters
         {
             switch (selectedFilter)
             {
+                case FiltersEnum.NoFilter:
+                    return (new NoFilter(), null);
                 case FiltersEnum.TestThreshold:
                     return (new TestThresholdFilter(), new TestThresholdParams());
                 case FiltersEnum.BradleyThresholding:

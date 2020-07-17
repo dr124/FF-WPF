@@ -1,6 +1,8 @@
 ﻿using System.Drawing;
 using System.Drawing.Imaging;
+using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace FF_WPF.Filters.Implementations
 {
@@ -16,6 +18,7 @@ namespace FF_WPF.Filters.Implementations
 
             var kernel = gaussParams.Kernel;
             var kernelRadius = gaussParams.Kernel.Length / 2;
+            var kernelSum = gaussParams.Kernel.Sum(x => x.Sum());
 
             unsafe
             {
@@ -23,44 +26,49 @@ namespace FF_WPF.Filters.Implementations
                 var outScan0 = (byte*) outBitmapData.Scan0.ToPointer();
 
                 //for every pixel
-                for (var i = 0; i < inBitmapData.Height; ++i)
-                for (var j = 0; j < inBitmapData.Width; ++j)
+                Parallel.For(0, inBitmapData.Height, i =>
                 {
-                    ct.ThrowIfCancellationRequested();
-
-                    var currPixel = GetPixelPointer(outScan0, i, j, outBitmapData.Stride, channels);
-
-                    //for every channel
-                    for (var c = 0; c < 3; c++)
+                    //for (var i = 0; i < inBitmapData.Height; ++i)
+                    for (var j = 0; j < inBitmapData.Width; ++j)
                     {
-                        var pixelSum = 0f;
-                        var kernelSum = 0f;
+                        ct.ThrowIfCancellationRequested();
 
-                        //for every element in kernel
-                        for (var ki = -kernelRadius; ki <= kernelRadius; ki++)
-                        for (var kj = -kernelRadius; kj <= kernelRadius; kj++)
+                        var currPixel = GetPixelPointer(outScan0, i, j, outBitmapData.Stride, channels);
+
+                        //for every channel
+                        for (var c = 0; c < 3; c++)
                         {
-                            var ii = i + ki;
-                            var jj = j + kj;
-                            if (ii < 0 || ii >= inBitmapData.Height || jj < 0 || jj >= inBitmapData.Width)
-                                continue;
-                            var kernelPixel = GetPixelPointer(inScan0, ii, jj, inBitmapData.Stride, channels);
-                            var k = kernel[ki + kernelRadius][kj + kernelRadius];
-                            kernelSum += k;
-                            pixelSum += kernelPixel[c] * k;
+                            var pixelSum = 0f;
+
+                            //for every element in kernel
+                            for (var ki = -kernelRadius; ki <= kernelRadius; ki++)
+                            for (var kj = -kernelRadius; kj <= kernelRadius; kj++)
+                            {
+                                var ii = i + ki;
+                                var jj = j + kj;
+                                byte* kernelPixel;
+                                //if pixel outside image then repeat using center pixel
+                                if (ii < 0 || ii >= inBitmapData.Height || jj < 0 || jj >= inBitmapData.Width)
+                                    kernelPixel = currPixel;
+                                else
+                                    kernelPixel = GetPixelPointer(inScan0, ii, jj, inBitmapData.Stride, channels);
+
+                                var k = kernel[ki + kernelRadius][kj + kernelRadius];
+                                pixelSum += kernelPixel[c] * k;
+                            }
+
+                            //todo: if kernelsum is 0 then normalize
+                            if (kernelSum == 0) kernelSum = 1; //if kernel == 0 (for eg. edge detection)
+                            currPixel[c] = (byte) (pixelSum / kernelSum);
                         }
-
-                        //todo: if kernelsum is 0 then normalize
-                        if (kernelSum == 0) kernelSum = 1; //if kernel == 0 (for eg. edge detection)
-                        currPixel[c] = (byte) (pixelSum / kernelSum);
                     }
-                }
+                });
+
+                outputImage.UnlockBits(outBitmapData);
+                inputImage.UnlockBits(inBitmapData);
+
+                return outputImage;
             }
-
-            outputImage.UnlockBits(outBitmapData);
-            inputImage.UnlockBits(inBitmapData);
-
-            return outputImage;
         }
     }
 }

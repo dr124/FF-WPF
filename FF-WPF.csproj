@@ -83,6 +83,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Commands\Command.cs" />
+    <Compile Include="Converters\BitmapToImageSourceConverter.cs" />
     <Compile Include="Converters\EnumBooleanConverter.cs" />
     <Compile Include="Filters\Implementations\BradleysThresholdFilter.cs" />
     <Compile Include="Filters\FilterFactory.cs" />

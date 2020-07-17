@@ -55,4 +55,12 @@ namespace FF_WPF.Filters
             return basePointer + y * stride + x * channels;
         }
     }
+
+    public class NoFilter : ImageFilter
+    {
+        protected override Bitmap ProcessImage(Bitmap image, FilterParams param, CancellationToken ct)
+        {
+            return image;
+        }
+    }
 }

@@ -11,6 +11,7 @@
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <conv:EnumBooleanConverter x:Key="EnumBooleanConverter" />
+        <conv:BitmapToImageSourceConverter x:Key="BitmapToImageSourceConverter" />
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -45,7 +46,9 @@
         <ProgressBar Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}"
                      IsIndeterminate="True" Height="10" VerticalAlignment="Bottom" Margin="10" />
         <Border Margin="10,10,10,10" BorderThickness="1" BorderBrush="Black" Grid.Column="1">
-            <Image Source="{Binding DisplayedImage}" />
+            <Image Source="{Binding DisplayedImage, Converter={StaticResource BitmapToImageSourceConverter}}" />
         </Border>
+        <Label Content="Preview (generating full size image)" Visibility="{Binding IsPreview, Converter={StaticResource BooleanToVisibilityConverter}}" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="28" Width="201"/>
+
     </Grid>
 </Window>

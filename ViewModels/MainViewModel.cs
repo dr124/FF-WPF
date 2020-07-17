@@ -3,7 +3,6 @@ using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using System.Windows.Media;
 using FF_WPF.Commands;
 using FF_WPF.Filters;
 using FF_WPF.Utils;
@@ -16,7 +15,6 @@ namespace FF_WPF.ViewModels
         // maximum width or height before image is downscaled
         private const int _maxImageWidthHeight = 1500;
         private const int _downscaleTo = 500;
-        private readonly Image.GetThumbnailImageAbort myCallback = ThumbnailCallback;
         private CancellationTokenSource _cancellationTokenSource;
         private ImageFilter _imageFilter;
 
@@ -25,15 +23,11 @@ namespace FF_WPF.ViewModels
             LoadImageCommand = new Command(LoadImage);
         }
 
-        //todo: refactor this
-        public static bool ThumbnailCallback()
-        {
-            return false;
-        }
-
         private void ApplyFilter(FilterParams p)
         {
             IsBusy = true;
+            IsPreview = true;
+
             _cancellationTokenSource?.Cancel();
             _cancellationTokenSource = new CancellationTokenSource();
             var ct = _cancellationTokenSource.Token;
@@ -42,8 +36,7 @@ namespace FF_WPF.ViewModels
             {
                 if (_smallImage != null)
                 {
-                    var smallImage = await _imageFilter.Filter(_smallImage, p, ct);
-                    DisplayedImage = smallImage.ToImageSource();
+                    DisplayedImage = await _imageFilter.Filter(_smallImage, p, ct);
                     // small delay so it doesnt give "epilepsy" when displaying
                     // constantly altering smallImage and Image
                     await Task.Delay(100, ct);
@@ -52,15 +45,17 @@ namespace FF_WPF.ViewModels
                 ct.ThrowIfCancellationRequested();
 
                 var image = await _imageFilter.Filter(_originalImage, p, ct);
-                DisplayedImage = image.ToImageSource();
-                IsBusy = false;
-            }, ct);
 
+                DisplayedImage = image;
+                IsBusy = false;
+                IsPreview = false;
+            }, ct);
         }
 
         private void LoadImage(object obj)
         {
             IsBusy = true;
+
             var openFileDialog = new OpenFileDialog
             {
                 Filter = "Image files |*.jpeg;*.jpg;*.gif;*.png;*.bmp"
@@ -73,14 +68,16 @@ namespace FF_WPF.ViewModels
                 var widthHeight = Math.Max(_originalImage.Width, _originalImage.Height);
                 if (widthHeight > _maxImageWidthHeight)
                 {
-                    var k = (float)_downscaleTo / widthHeight;
-                    _smallImage = (Bitmap) _originalImage.GetThumbnailImage(
-                        (int)(_originalImage.Width * k),
-                        (int)(_originalImage.Height * k),
-                        myCallback, IntPtr.Zero);
-                } else _smallImage = null;
+                    var scale = (float) _downscaleTo / widthHeight;
+                    _smallImage = _originalImage.ResizeImage(scale);
+                }
+                else
+                {
+                    _smallImage = null;
+                }
 
-                DisplayedImage = _originalImage.ToImageSource();
+                DisplayedImage = _originalImage;
+                ApplyFilter(FilterParams);
             }
 
             IsBusy = false;
@@ -90,15 +87,16 @@ namespace FF_WPF.ViewModels
 
         public ICommand LoadImageCommand { get; }
 
-        
-        private FiltersEnum _selectedFilter;
 
         private FilterParams _filterParams;
+
         public FilterParams FilterParams
         {
             get => _filterParams;
             set => SetProperty(ref _filterParams, value);
         }
+
+        private FiltersEnum _selectedFilter;
 
         public FiltersEnum SelectedFilter
         {
@@ -108,7 +106,9 @@ namespace FF_WPF.ViewModels
                 if (SetProperty(ref _selectedFilter, value))
                 {
                     (_imageFilter, FilterParams) = FilterFactory.GetFilter(value);
-                    FilterParams.OnUpdate += ApplyFilter;
+                    if (FilterParams != null)
+                        FilterParams.OnUpdate += ApplyFilter;
+                    ApplyFilter(FilterParams);
                 }
             }
         }
@@ -116,19 +116,28 @@ namespace FF_WPF.ViewModels
         private Bitmap _smallImage;
         private Bitmap _originalImage;
 
-        private ImageSource _displayedImage;
+        private Bitmap _displayedImage;
 
-        public ImageSource DisplayedImage
+        public Bitmap DisplayedImage
         {
             get => _displayedImage;
             set => SetProperty(ref _displayedImage, value);
         }
 
         private bool _isBusy;
+
         public bool IsBusy
         {
             get => _isBusy;
             set => SetProperty(ref _isBusy, value);
+        }
+
+        private bool _isPreview;
+
+        public bool IsPreview
+        {
+            get => _isPreview;
+            set => SetProperty(ref _isPreview, value);
         }
 
         #endregion

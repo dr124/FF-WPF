@@ -11,6 +11,20 @@ namespace FF_WPF.Utils
 {
     public static class ImageExtensions
     {
+        private static readonly Image.GetThumbnailImageAbort myCallback = ThumbnailCallback;
+        private static bool ThumbnailCallback()
+        {
+            return false;
+        }
+
+        public static Bitmap ResizeImage(this Bitmap bitmap, float scale)
+        {
+            return (Bitmap)bitmap.GetThumbnailImage(
+                (int)(bitmap.Width * scale),
+                (int)(bitmap.Height * scale),
+                myCallback, IntPtr.Zero);
+        }
+
         public static ImageSource ToImageSource(this Bitmap bitmap)
         {
 
