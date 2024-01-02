@@ -1,8 +1,7 @@
 ﻿using System.Windows;
 
-namespace FF_WPF
+namespace FF.WPF;
+
+public partial class App : Application
 {
-    public partial class App : Application
-    {
-    }
 }

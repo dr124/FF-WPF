@@ -1,13 +1,11 @@
 ﻿using System.Drawing;
-using System.Threading;
 
-namespace FF_WPF.Filters
+namespace FF.WPF.Filters;
+
+public class NoFilter : ImageFilter
 {
-    public class NoFilter : ImageFilter
+    protected override Bitmap ProcessImage(Bitmap image, FilterParams param, CancellationToken ct)
     {
-        protected override Bitmap ProcessImage(Bitmap image, FilterParams param, CancellationToken ct)
-        {
-            return image;
-        }
+        return image;
     }
 }

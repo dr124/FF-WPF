@@ -1,14 +1,14 @@
 ﻿using System.Windows;
-using FF_WPF.ViewModels;
+using FF.WPF.ViewModels;
 
-namespace FF_WPF.Views
+namespace FF.WPF.Views;
+
+public partial class MainWindow : Window
 {
-    public partial class MainWindow : Window
+    public MainWindow()
     {
-        public MainWindow()
-        {
-            InitializeComponent();
-            DataContext = new MainViewModel();
-        }
+        InitializeComponent();
+        DataContext = new MainViewModel();
+        
     }
 }

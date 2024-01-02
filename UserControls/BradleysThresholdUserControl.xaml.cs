@@ -1,14 +1,11 @@
-﻿using System.Windows;
-using System.Windows.Controls;
-using FF_WPF.Filters.Implementations;
+﻿using System.Windows.Controls;
 
-namespace FF_WPF.UserControls
+namespace FF.WPF.UserControls;
+
+public partial class BradleysThresholdUserControl : UserControl
 {
-    public partial class BradleysThresholdUserControl : UserControl
+    public BradleysThresholdUserControl()
     {
-        public BradleysThresholdUserControl()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

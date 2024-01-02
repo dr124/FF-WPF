@@ -1,14 +1,11 @@
-﻿using System.Windows;
-using System.Windows.Controls;
-using FF_WPF.Filters.Implementations;
+﻿using System.Windows.Controls;
 
-namespace FF_WPF.UserControls
+namespace FF.WPF.UserControls;
+
+public partial class TestThresholdUserControl : UserControl
 {
-    public partial class TestThresholdUserControl : UserControl
+    public TestThresholdUserControl()
     {
-        public TestThresholdUserControl()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

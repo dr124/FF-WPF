@@ -1,25 +1,19 @@
 ﻿using System.ComponentModel;
-using FF_WPF.Filters.Implementations;
+using FF.WPF.Filters.Implementations;
 
-namespace FF_WPF.Filters
+namespace FF.WPF.Filters;
+
+public class FilterFactory
 {
-    public class FilterFactory
+    public static (ImageFilter, FilterParams) GetFilter(FiltersEnum selectedFilter)
     {
-        public static (ImageFilter, FilterParams) GetFilter(FiltersEnum selectedFilter)
+        return selectedFilter switch
         {
-            switch (selectedFilter)
-            {
-                case FiltersEnum.NoFilter:
-                    return (new NoFilter(), null);
-                case FiltersEnum.TestThreshold:
-                    return (new TestThresholdFilter(), new TestThresholdParams());
-                case FiltersEnum.BradleyThresholding:
-                    return (new BradleysThresholdFilter(), new BradleysThresholdParams());
-                case FiltersEnum.GaussianBlur:
-                    return (new GaussianBlurFilter(), new GaussianBlurParams());
-                default:
-                    throw new InvalidEnumArgumentException("This filter does not exist");
-            }
-        }
+            FiltersEnum.NoFilter => (new NoFilter(), null),
+            FiltersEnum.TestThreshold => (new TestThresholdFilter(), new TestThresholdParams()),
+            FiltersEnum.BradleyThresholding => (new BradleysThresholdFilter(), new BradleysThresholdParams()),
+            FiltersEnum.GaussianBlur => (new GaussianBlurFilter(), new GaussianBlurParams()),
+            _ => throw new InvalidEnumArgumentException("This filter does not exist")
+        };
     }
 }

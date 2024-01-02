@@ -1,10 +1,9 @@
-﻿namespace FF_WPF.Filters
+﻿namespace FF.WPF.Filters;
+
+public enum FiltersEnum
 {
-    public enum FiltersEnum
-    {
-        NoFilter,
-        BradleyThresholding,
-        GaussianBlur,
-        TestThreshold
-    }
+    NoFilter,
+    BradleyThresholding,
+    GaussianBlur,
+    TestThreshold
 }
